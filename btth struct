@@ -1,0 +1,121 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_EMPLOYEES 100
+
+typedef struct {
+	int employeeId;
+	char name[100];
+	char position[100];
+	float salary;
+} Employee;
+
+Employee employees[MAX_EMPLOYEES];
+int numEmployees = 0;
+
+void addEmployee() {
+	if (numEmployees >= MAX_EMPLOYEES) {
+		printf("Danh sach da day.\n");
+		return;
+	}
+
+	Employee newEmployee;
+	printf("Nhap ID: ");
+	scanf("%d", &(newEmployee.employeeId));
+	printf("Nhap luong: ");
+	scanf("%s", newEmployee.name);
+	printf("Nhap chuc vu: ");
+	scanf("%s", newEmployee.position);
+	printf("Nhap luong: ");
+	scanf("%f", &(newEmployee.salary));
+
+	employees[numEmployees] = newEmployee;
+	numEmployees++;
+
+	printf("Them thanh cong! \n");
+}
+void removeEmployee() {
+	int employeeId;
+	printf("Nhap ID muon xoa: ");
+	scanf("%d", &employeeId);
+
+	int foundList = -1;
+	for (int i = 0; i < numEmployees; i++) {
+		if (employees[i].employeeId == employeeId) {
+			foundList = i;
+			break;
+		}
+	}
+
+	if (foundList == -1) {
+		printf("Khong ton tai ID: %d.\n", employeeId);
+		return;
+	}
+
+
+	for (int i = foundList; i < numEmployees - 1; i++) {
+		employees[i] = employees[i + 1];
+	}
+
+	numEmployees--;
+
+	printf("Xoa thanh cong!\n");
+}
+
+void displayEmployees() {
+	printf("Danh sach nhan vien:\n");
+	printf("ID\tName\tPosition\t\tSalary\n");
+	for (int i = 0; i < numEmployees; i++) {
+		printf("%d\t%s\t\t%s\t\t%.2f\n", employees[i].employeeId, employees[i].name, employees[i].position, employees[i].salary);
+	}
+}
+
+int compareByName(const void* a, const void* b) {
+	Employee* empA = (Employee*)a;
+	Employee* empB = (Employee*)b;
+	return strcmp(empA->name, empB->name);
+}
+
+void sortEmployeesByName() {
+	qsort(employees, numEmployees, sizeof(Employee), compareByName);
+	printf("Sap xep thanh cong!\n");
+}
+
+int main() {
+	int choice;
+
+	do {
+		printf("Quan li nhan su\n");
+		printf("1. Them nhan vien\n");
+		printf("2. Xoa nhan vien\n");
+		printf("3. Danh sach nhan vien\n");
+		printf("4. Sap xep theo ten\n");
+		printf("5. Thoat\n");
+		printf("Nhap lua chon: ");
+		scanf("%d", &choice);
+
+		switch (choice) {
+			case 1:
+				addEmployee();
+				break;
+			case 2:
+				removeEmployee();
+				break;
+			case 3:
+				displayEmployees();
+				break;
+			case 4:
+				sortEmployeesByName();
+				break;
+			case 5:
+				printf("Huy chuong trinh.\n");
+				break;
+			default:
+				printf("Error.\n");
+				break;
+		}
+	} while (choice != 5);
+
+	return 0;
+}
